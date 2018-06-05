@@ -1,4 +1,4 @@
-let bsurl = 'https://poche.fm/api/app/playlists/'
+let bsurl = 'http://localhost:8080/elearning/audio/list'
 Page({
     data: {
         tracks: [],
@@ -12,7 +12,7 @@ Page({
         })
         console.log(bsurl + options.id)
         wx.request({
-            url: bsurl + options.id,
+            url: bsurl,
             success: function (res) {
               wx.hideToast()
               that.setData({

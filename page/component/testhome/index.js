@@ -48,14 +48,14 @@ Page({
       url: bsurl,
       success: function (res) {
         var playlists = []
-        if (res.data.length != 3) {
-          var playlist = {
-            id:0,
-            cover:'https://s.poche.fm/nowlistening/cover.png',
-            title:'破车最近在听的歌',
-          }
-          playlists.push(playlist)
-        }
+        // if (res.data.length != 3) {
+        //   var playlist = {
+        //     id:0,
+        //     cover:'https://s.poche.fm/nowlistening/cover.png',
+        //     title:'破车最近在听的歌',
+        //   }
+        //   playlists.push(playlist)
+        // }
         res.data.forEach(function(playlist) {
           playlists.push(playlist)
         })
@@ -306,4 +306,36 @@ Page({
   onHide: function () {
     clearInterval(seek)
   },
+
+  onRecorderStart: function () {
+    app.stopmusic();
+    app.recorderStart();
+  },
+  // 暂停录音
+  onRecorderPause: function () {
+    app.recorderPause();
+  },
+  // 继续录音
+  onRecorderResume: function () {
+    app.recorderResume();
+  },
+  // 停止录音
+  onRecorderStop: function () {
+    app.recorderStop();
+  },
+  // 播放声音
+  recorderPlay: function () {
+
+    innerAudioContext.autoplay = true
+    innerAudioContext.src = this.tempFilePath,
+      innerAudioContext.onPlay(() => {
+        console.log('开始播放')
+      })
+    innerAudioContext.onError((res) => {
+      console.log(res.errMsg)
+      console.log(res.errCode)
+    })
+
+  },
+
 })

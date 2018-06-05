@@ -148,7 +148,7 @@ border-radius: 50%;overflow: hidden;}
 .pi-act image{width:120rpx;height: 120rpx;}
 
 
-#playingaction{margin: 10rpx 10rpx 30rpx;display: flex}
+#playingaction{margin: 10rpx 10rpx 10rpx;display: flex}
 .pa-baction,.pa-maction,.pa-saction{flex: 1;text-align: center;width: 100%}
 .pa-baction image{width:110rpx;height:110rpx; vertical-align: middle }
 .pa-maction image{width:80rpx;height:80rpx;vertical-align: middle;margin-top: 15rpx}
@@ -157,6 +157,8 @@ border-radius: 50%;overflow: hidden;}
 
 .playing #playing-main{animation-play-state: running !important;}
 .playing #playing-zz image{transform: rotate(-0deg) }
+
+#recorderaction{margin: 20rpx 20rpx 40rpx 20rpx;display: flex}
 
 /*弹出播放列表*/
 .music_list{

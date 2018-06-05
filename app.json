@@ -1,7 +1,7 @@
 {
   "pages":[
-    "page/component/home/index",
-    "page/component/tracks/index"
+    "page/component/testhome/index",
+    "page/component/testtracks/index"
   ],
   "window":{
     "backgroundTextStyle":"light",

@@ -2,6 +2,7 @@
 let bsurl = 'https://poche.fm/api/app/playlists'
 
 App({
+  
   onLaunch: function () {
     // 调用API从本地缓存中获取数据
     var logs = wx.getStorageSync('logs') || []
@@ -109,7 +110,7 @@ App({
       }
     })
   },
-// 开始录音的时候
+  // 开始录音的时候
   recorderStart: function () {
 
     const options = {
@@ -121,47 +122,46 @@ App({
       frameSize: 50,// 指定帧大小，单位 KB
     }
     // 开始录音
-    recorderManager.start(options);
-    recorderManager.onStart(() => {
+    this.recorderManager.start(options);
+    this.recorderManager.onStart(() => {
       console.log('recorder start')
     });
     // 错误回调
-    recorderManager.onError((res) => {
+    this.recorderManager.onError((res) => {
       console.log(res);
     })
   },
   // 暂停录音
   recorderPause: function(){
-	  recorderManager.pause();
+    this.recorderManager.pause();
 	  console.log('recorder pause')
   },
   // 继续录音
   recorderResume: function(){
-	  recorderManager.resume();
+    this.recorderManager.resume();
 	  console.log('recorder resume')
   },
   // 停止录音
   recorderStop: function () {
-    recorderManager.stop();
-    recorderManager.onStop((res) => {
-      this.tempFilePath = res.tempFilePath;
+    this.recorderManager.stop();
+    this.recorderManager.onStop((res) => {
+      this.globalData.recorderTempFilePath = res.tempFilePath;
       console.log('停止录音', res.tempFilePath)
-      const { tempFilePath } = res
+      
     })
   },
   // 播放声音
   recorderPlay: function () {
 
-    innerAudioContext.autoplay = true
-    innerAudioContext.src = this.tempFilePath,
-    innerAudioContext.onPlay(() => {
+    this.innerAudioContext.autoplay = true
+    this.innerAudioContext.src = this.globalData.recorderTempFilePath,
+    this.innerAudioContext.onPlay(() => {
       console.log('开始播放')
     })
-    innerAudioContext.onError((res) => {
+    this.innerAudioContext.onError((res) => {
       console.log(res.errMsg)
       console.log(res.errCode)
     })
-
   },
   onShow: function () {
     this.globalData.hide = false
@@ -189,6 +189,9 @@ App({
     	complete: function (res) {
     		return res.duration;
     	}
-    })
-  }
+    }),
+    recorderTempFilePath:""
+  },
+  recorderManager:wx.getRecorderManager(),
+  innerAudioContext: wx.createInnerAudioContext()
 })
