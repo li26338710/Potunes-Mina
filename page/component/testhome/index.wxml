@@ -3,7 +3,7 @@
 <import src="../../../utils/lrc.wxml" />
 
 <view class="swiper-tab">
-    <view class="swiper-tab-list {{currentTab==0 ? 'on' : ''}}" data-current="0" bindtap="swichNav">音频列表</view>
+    <view class="swiper-tab-list {{currentTab==0 ? 'on' : ''}}" data-current="0" bindtap="swichNav">分类列表</view>
     <view class="swiper-tab-list {{currentTab==1 ? 'on' : ''}}" data-current="1" bindtap="swichNav">正在播放</view>
 </view>
 
@@ -75,20 +75,23 @@
                 </view>
               </view>
               <view id="recorderaction">
-                <view class="pa-saction" bindtap="onRecorderPlay">
-                  <image src="../../../imgs/aab.png" />
-                </view>
-                <view class="pa-saction" bindtap="onRecorderStart">
-                  <image src="../../../imgs/aab.png" />
-                </view>
-                <view class="pa-saction" bindtap="onRecorderPause">
+                <view class="pa-saction" bindtap="onRecorderPlay" hidden="{{recording!=3}}">
                   <image src="../../../imgs/ajf.png" />
                 </view>
-                <view class="pa-saction" bindtap="onRecorderResume">
-                  <image src="../../../imgs/aab.png" />
+                <view class="pa-saction" bindtap="onRecorderStart" hidden="{{recording!=0}}">
+                  <image src="../../../imgs/irecording.png" />
                 </view>
-                <view class="pa-saction" bindtap="onRecorderStop">
-                  <image src="../../../imgs/aab.png" />
+                <view class="pa-saction" bindtap="onRecorderPause" hidden="{{recording!=1}}">
+                  <image src="../../../imgs/ajd.png" />
+                </view>
+                <view class="pa-saction" bindtap="onRecorderResume" hidden="{{recording!=2}}">
+                  <image src="../../../imgs/irecordresume.png" />
+                </view>
+                <view class="pa-saction" bindtap="onRecorderStop" hidden="{{recording==0||recording==3}}">
+                  <image src="../../../imgs/irecordstop.png" />
+                </view>
+                <view class="pa-saction" bindtap="onRecorderUpload" hidden="{{recording!=3}}">
+                  <image src="../../../imgs/irecordupload.png" />
                 </view>
                 
               </view>

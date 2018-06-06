@@ -118,8 +118,7 @@ App({
       sampleRate: 44100,// 采样率
       numberOfChannels: 1,// 录音通道数
       encodeBitRate: 192000,// 编码码率
-      format: 'mp3',// 音频格式，有效值 aac/mp3
-      frameSize: 50,// 指定帧大小，单位 KB
+      format: 'mp3'// 音频格式，有效值 aac/mp3
     }
     // 开始录音
     this.recorderManager.start(options);
@@ -170,6 +169,7 @@ App({
     this.globalData.hide = true
   },
   globalData: {
+    apiurl : "http://localhost:8080",
     hasLogin: false,
     hide: false,
     list_am: [],

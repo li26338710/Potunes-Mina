@@ -1,4 +1,6 @@
-let bsurl = 'http://localhost:8080/elearning/audio/list'
+//获取应用实例
+let app = getApp()
+let bsurl = app.globalData.apiurl + '/elearning/audio/list/'
 Page({
     data: {
         tracks: [],
@@ -12,7 +14,7 @@ Page({
         })
         console.log(bsurl + options.id)
         wx.request({
-            url: bsurl,
+            url: bsurl + options.id,
             success: function (res) {
               wx.hideToast()
               that.setData({
@@ -34,7 +36,7 @@ Page({
             var prePage = pages[pages.length - 2]
             prePage.changeData(this.data.tracks, p, 1)
             wx.navigateBack({
-                url: '../home/index?currentTab=1'
+                url: '../testhome/index?currentTab=1'
             })
         }
 

@@ -1,4 +1,6 @@
-let bsurl = 'http://localhost:8080/elearning/audio/list'
+//获取应用实例
+let app = getApp()
+let bsurl = app.globalData.apiurl + '/elearning/audio/list'
  
 var common = require('../../../utils/util.js');
 
@@ -31,10 +33,10 @@ let defaultdata = {
   animationData: {},
   pop: false,
   scroll: false,
-  currentTab: 0
+  currentTab: 0,
+  recording:0, // 0 : Stop ,1:recording ,2:pausing
 }
-//获取应用实例
-let app = getApp()
+
 Page({
   data: defaultdata,
   onLoad: function(options) {
@@ -48,14 +50,6 @@ Page({
       url: bsurl,
       success: function (res) {
         var playlists = []
-        // if (res.data.length != 3) {
-        //   var playlist = {
-        //     id:0,
-        //     cover:'https://s.poche.fm/nowlistening/cover.png',
-        //     title:'破车最近在听的歌',
-        //   }
-        //   playlists.push(playlist)
-        // }
         res.data.forEach(function(playlist) {
           playlists.push(playlist)
         })
@@ -114,7 +108,7 @@ Page({
   tracks: function(event) {
     var index = event.currentTarget.id
     var playlist = this.data.playlists[index]
-    var p = playlist.id
+    var p = playlist.idCategory
     var title = playlist.title
     wx.navigateTo({
         url: '../testtracks/index?id=' + p + '&title=' + title
@@ -133,13 +127,17 @@ Page({
       music: curMusic,
       lrc: [],
       lrcindex: 0,
-      currentTab: tab
+      currentTab: tab,
     })
     app.globalData.curplay.id = curMusic.id
     //存储当前播放
     wx.setStorageSync("curIndex", index)
     wx.setStorageSync("tracks", tracks)
     app.seekmusic(1)
+    if (!this.data.initial) {
+      this.onRecorderPause();
+    }
+    
     if (this.data.showlrc) {
       common.loadlrc(this)
     }
@@ -148,11 +146,10 @@ Page({
   playingtoggle:function() {
     var that = this
     if (this.data.initial) {
-      // this.play(this.data.tracks, this.data.curIndex)
+      this.changeData(this.data.tracks, this.data.curIndex)
       this.setData({
         initial: false
       })
-      this.changeData(this.data.tracks, this.data.curIndex)
       wx.showToast({
         title: '开始播放',
         icon: 'success',
@@ -160,9 +157,12 @@ Page({
       })
       return
     }
+    if (this.data.recording==1) {
+      this.onRecorderPause();
+    }
     if (this.data.playing) {
       that.setData({
-        playing: false
+        playing: false,
       })
       app.stopmusic(1)
       wx.showToast({
@@ -178,17 +178,13 @@ Page({
           duration: 2000
         })
         that.setData({
-          playing: true
+          playing: true,
         })
       }, app.globalData.currentPosition)
     }
   },
   playnext: function (e) {
-    if (this.data.initial) {
-      this.setData({
-        initial: false
-      })
-    }
+    
     let shuffle = this.data.shuffle
     let count = this.data.tracks.length
     let lastIndex = parseInt(this.data.curIndex)
@@ -204,13 +200,14 @@ Page({
       }
     }
     this.changeData(this.data.tracks, lastIndex)
-  },
-  playprev: function (e) {
     if (this.data.initial) {
       this.setData({
         initial: false
       })
     }
+  },
+  playprev: function (e) {
+    
     let shuffle = this.data.shuffle
     let lastIndex = parseInt(this.data.curIndex)
     let count = this.data.tracks.length
@@ -225,12 +222,19 @@ Page({
       }
     }
     this.changeData(this.data.tracks, lastIndex)
+    if (this.data.initial) {
+      this.setData({
+        initial: false
+      })
+    }
   },
   playFF: function () {
     app.playFF();
+    this.onRecorderPause();
   },
   playFB: function () {
     app.playFB();
+    this.onRecorderPause();
   },
 
   playshuffle: function() {
@@ -310,21 +314,34 @@ Page({
   onRecorderStart: function () {
     app.stopmusic();
     app.recorderStart();
+    this.setData({
+    	recording:1
+    })
   },
   // 暂停录音
   onRecorderPause: function () {
     app.recorderPause();
+    this.setData({
+    	recording:2
+    })
   },
   // 继续录音
   onRecorderResume: function () {
+    app.stopmusic();
     app.recorderResume();
+    this.setData({
+    	recording:1
+    })
   },
   // 停止录音
   onRecorderStop: function () {
     app.recorderStop();
+    this.setData({
+    	recording:3
+    })
   },
   // 播放声音
-  recorderPlay: function () {
+  onRecorderPlay: function () {
 
     innerAudioContext.autoplay = true
     innerAudioContext.src = this.tempFilePath,
@@ -337,5 +354,57 @@ Page({
     })
 
   },
+  onRecorderUpload: function () {
+    
+    this.setData({
+      recording: 0
+    });
+    var urls = app.globalData.apiurl + "/elearning/recorder/upload";
+    console.log(app.globalData.recorderTempFilePath);
+    wx.uploadFile({
+      url: urls,
+      filePath: app.globalData.recorderTempFilePath,
+      name: 'file',
+      header: {
+        'content-type': 'multipart/form-data'
+      },
+      success: function (res) {
+        var str = res.data;
+        wx.showToast({
+          title: '录音上传成功',
+          icon: 'success',
+          duration: 2000
+        })
+        // var data = JSON.parse(str);
+        // if (data.states == 1) {
+          // var cEditData = s.data.editData;
+          // cEditData.recodeIdentity = data.identitys;
+          // s.setData({ editData: cEditData });
+        // }
+        // else {
+          // wx.showModal({
+          //   title: '提示',
+          //   content: data.message,
+          //   showCancel: false,
+          //   success: function (res) {
 
-})
+          //   }
+          // });
+        // }
+        // wx.hideToast();
+      },
+      fail: function (res) {
+        console.log(res);
+        wx.showModal({
+          title: '提示',
+          content: "网络请求失败，请确保网络是否正常",
+          showCancel: false,
+          success: function (res) {
+
+          }
+        });
+        wx.hideToast();
+      }
+    });
+  }
+}) 
