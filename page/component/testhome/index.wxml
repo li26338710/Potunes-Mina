@@ -43,6 +43,7 @@
             <view id="playing-actwrap">
               <template is="playingpercent" data="{{playtime:playtime,percent:percent,duration:duration,downloadPercent:downloadPercent}}" />
               <view id="playingaction">
+                <!-- 
                 <view class="pa-saction" bindtap="playshuffle" hidden="{{shuffle!=1}}">
                   <image src="../../../imgs/a_p.png" />
                 </view>
@@ -51,7 +52,9 @@
                 </view>
                 <view class="pa-saction" bindtap="playshuffle" hidden="{{shuffle!=3}}">
                   <image src="../../../imgs/aa9.png" />
-                </view>
+                </view> 
+                -->
+
                 <view class="pa-maction" data-other="-1" bindtap="playprev">
                   <image src="../../../imgs/ajh.png" />
                 </view>
@@ -79,7 +82,7 @@
                   <image src="../../../imgs/ajf.png" />
                 </view>
                 <view class="pa-saction" bindtap="onRecorderStart" hidden="{{recording!=0}}">
-                  <image src="../../../imgs/irecording.png" />
+                  <button size="mini"open-type="getUserInfo" bindgetuserinfo="onGotUserInfo"><image src="../../../imgs/irecording.png" /></button>
                 </view>
                 <view class="pa-saction" bindtap="onRecorderPause" hidden="{{recording!=1}}">
                   <image src="../../../imgs/ajd.png" />

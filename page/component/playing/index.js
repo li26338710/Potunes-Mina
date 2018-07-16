@@ -1,6 +1,6 @@
 //获取应用实例
 let app = getApp()
-let bsurl = app.globalData.apiurl + '/elearning/audio/list'
+let bsurl = app.globalData.apiurl + '/elearning/audio/getMusicInfo'
  
 var common = require('../../../utils/util.js');
 
@@ -9,11 +9,9 @@ let defaultdata = {
   winWidth: 0,
   winHeight: 0,
   listHeight: 0,
-  // tab切换
-  currentTab: 0,
+  tracks: [],
   // 播放列表
   playlists: [],
-  tracks: [],
   coverImgUrl: "http://lastshrek.b0.upaiyun.com/icon.jpg",
   nowPlayingTitle:"请选择歌曲",
   nowPlayingArtist: "",
@@ -29,27 +27,32 @@ let defaultdata = {
   curIndex: 0,
   initial: true,
   shuffle: 1,
-  music: {},
+  music:{},
+
   animationData: {},
   pop: false,
   scroll: false,
   currentTab: 0,
   recording:0, // 0 : Stop ,1:recording ,2:pausing
+
+  id:0,
+  mode:0,
+  index:0
 }
 
 Page({
   data: defaultdata,
   onLoad: function(options) {
     var that = this
-    if (options.currentTab) {
-      that.setData({
-        currentTab: options.currentTab
-      })
-    }
+    that.setData({
+      mode: options.mode,
+      id: options.id,
+      index: options.index,
+    })
+
     wx.request({
-      url: bsurl,
+      url: bsurl + "/" + options.id + "/" + options.mode + "?openid=" + app.globalData.userInfo.openId,
       success: function (res) {
-        var playlists = []
         res.data.forEach(function(playlist) {
           playlists.push(playlist)
         })
@@ -57,7 +60,9 @@ Page({
         that.setData({
           listHeight: res.data.length * 230,
           playlists: playlists,
-          loadingHide:true
+          loadingHide:true,
+          curIndex:0,
+          initial:true
         })
       }
     })
@@ -70,25 +75,11 @@ Page({
         })
       }
     })
-    // 获取上次播放数据
-    let index = wx.getStorageSync('curIndex')
-    let tracks = wx.getStorageSync('tracks')
-    if (tracks) {
-      let track = tracks[index]
-      that.setData( {
-        curIndex: index,
-        tracks: tracks,
-        coverImgUrl:track.aCover,
-        nowPlayingArtist: track.cName,
-        nowPlayingTitle: track.aName,
-        music: track
-      })
-    }
-
     //监听停止,自动下一首
-    wx.onBackgroundAudioStop(function(){
+    wx.onBackgroundAudioStop(function () {
       that.playnext();
     })
+    //that.playingtoggle();
   },
   bindChange: function(e) {
     var that = this
@@ -131,17 +122,16 @@ Page({
       playing: true,
       music: curMusic,
       lrc: [],
-      lrcindex: 0,
-      currentTab: tab,
+      lrcindex: 0
     })
     app.globalData.curplay.id = curMusic.id
     //存储当前播放
     wx.setStorageSync("curIndex", index)
     wx.setStorageSync("tracks", tracks)
     app.seekmusic(1)
-    if (!this.data.initial) {
-      this.onRecorderPause();
-    }
+    // if (!this.data.initial) {
+    //   this.onRecorderPause();
+    // }
     
     if (this.data.showlrc) {
       common.loadlrc(this)
@@ -162,9 +152,9 @@ Page({
       })
       return
     }
-    if (this.data.recording==1) {
-      this.onRecorderPause();
-    }
+    // if (this.data.recording==1) {
+    //   this.onRecorderPause();
+    // }
     if (this.data.playing) {
       that.setData({
         playing: false,
@@ -194,17 +184,13 @@ Page({
     let count = this.data.tracks.length
     let lastIndex = parseInt(this.data.curIndex)
 
-    if (shuffle == 3) {
-      //随机播放
-      lastIndex = Math.floor(Math.random() * count)
-    } else if (shuffle == 1) {
-      if (lastIndex == count - 1) {
-        lastIndex = 0
-      } else {
-        lastIndex = lastIndex + 1
-      }
+    if (lastIndex == count - 1) {
+      lastIndex = 0
+    } else {
+      lastIndex = lastIndex + 1
     }
-    this.changeData(this.data.tracks, lastIndex)
+
+    this.changeData(this.data.playlists, lastIndex)
     if (this.data.initial) {
       this.setData({
         initial: false

@@ -1,6 +1,9 @@
 {
   "pages":[
+    "page/component/homePage/homePage",
     "page/component/testhome/index",
+    "page/component/playing/index",
+    "page/component/modeChange/index",
     "page/component/testtracks/index"
   ],
   "window":{

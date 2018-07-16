@@ -1,0 +1,85 @@
+.headView {
+    flex: none;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10rpx 0;
+    height: 60rpx;
+}
+.headItem {
+    text-align: center;
+    position: relative;
+    flex: auto;
+    height: 60rpx;
+}
+.active:after {
+    content: '';
+    display: block;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 5rpx;
+    background-color: #be241c;
+}
+.swiImage {
+    width: 100%;
+}
+
+.item_hot {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    flex-wrap: wrap-reverse;
+}
+.item_hot_item {
+    width: 240rpx;
+}
+.ninePic {
+    width: 240rpx;
+    height: 240rpx;
+}
+/*.listen_count {
+    width: 100rpx;
+    height: 40rpx;
+    background-color: red;
+}*/
+
+.section_rec {
+    display:flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content:center;
+    align-items: center;
+    height: 140rpx;
+    width: 100%;
+    border-bottom: 1px solid #DCDCDC;
+}
+.rec_left {
+    width: 20%;
+}
+.rec_right {
+    width: 80%;
+    height: 120rpx;
+    position: absolute;
+    margin-top: -90rpx;
+    margin-left: 30rpx;
+    right: 10rpx;
+ }
+.rec_left image {
+    width: 120rpx;
+    height: 120rpx;
+    margin: 10rpx 10rpx;
+}
+.radioTitle {
+    width: 240rpx;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+.radioType {
+    text-align: center;
+    color: #858585;
+    font-size: 32rpx;
+}

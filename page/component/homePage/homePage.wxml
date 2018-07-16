@@ -1,0 +1,30 @@
+
+<!--pages/homePage/homePage.wxml-->
+<view class="page">
+
+  <!--推荐-->
+  <view class="page_item" wx:if="{{head_choseIndex == 0}}">
+    <swiper autoplay="true" indicator-dots="true" interval="5000" duration="1000">
+      <block wx:for="{{scrol_picData}}" wx:key="">
+        <swiper-item>
+          <image class="swiImage" src="{{item.randpic}}"></image>
+        </swiper-item>
+      </block>
+    </swiper>
+
+    <view clas="section_rec">
+      <block wx:for="{{songRec}}" wx:key="">
+        <view bindtap="selectMode" data-id="{{item.song_id}}" data-songindex="{{index}}">
+          <view class="rec_left">
+            <image src="{{item.pic_small}}"></image>
+          </view>
+          <view class="rec_right">
+            <view>{{item.title}}-{{item.author}}</view>
+            <view>{{item.recommend_reason}}</view>
+          </view>
+        </view>
+      </block>
+    </view>
+
+  </view>
+</view>

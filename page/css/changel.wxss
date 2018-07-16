@@ -1,0 +1,17 @@
+.changel_item {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20rpx;
+}
+.changel_detail {
+    text-align: center;
+    width: 33%;
+    height: 260rpx;
+}
+.changel_detail image {
+    width: 200rpx;
+    height: 200rpx;
+}

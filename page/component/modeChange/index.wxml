@@ -1,0 +1,12 @@
+<!--pages/modeChange/index.wxml-->
+<view class="content">
+    <view style="flex:1;width:80%">
+      <button type="default" type="primary" size="default" bindtap="modeChange" hover-class="other-button-hover" data-mode="1"> 原声 </button>
+    </view>
+    <view style="flex:1;width:80%">
+      <button type="default" type="primary" size="default" bindtap="modeChange" hover-class="other-button-hover" data-mode="2"> 跟读 </button>
+    </view>
+    <view style="flex:1;width:80%">
+      <button type="default" type="primary" size="default" bindtap="modeChange" hover-class="other-button-hover" data-mode="3"> 回听 </button>
+    </view>
+</view>

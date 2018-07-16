@@ -1,6 +1,9 @@
 //app.js
 let bsurl = 'https://poche.fm/api/app/playlists'
 
+const APP_ID = 'wx313f2640a356eb92';//输入小程序appid  
+const APP_SECRET = '51fbd5e5c646f7f420a1d3bb6dd4cd06';//输入小程序app_secret  
+
 App({
   
   onLaunch: function () {
@@ -8,35 +11,52 @@ App({
     var logs = wx.getStorageSync('logs') || []
     logs.unshift(Date.now())
     wx.setStorageSync('logs', logs)
+    this.getUserInfo()
   },
-  getUserInfo:function(cb){
+  getUserInfo: function () {
     var that = this
-    if(this.globalData.userInfo){
-      typeof cb == "function" && cb(this.globalData.userInfo)
-    }else{
-      // 调用登录接口
-      wx.login({
-        success: function () {
-          wx.getUserInfo({
-            success: function (res) {
-              that.globalData.userInfo = res.userInfo
-              typeof cb == "function" && cb(that.globalData.userInfo)
-            }
-          })
-        }
-      })
-    }
+
+    // 调用登录接口
+    wx.login({
+      success: function (res1) {
+        wx.request({
+          //获取openid接口  
+          url: 'https://api.weixin.qq.com/sns/jscode2session',
+          data: {
+            appid: APP_ID,
+            secret: APP_SECRET,
+            js_code: res1.code,
+            grant_type: 'authorization_code'
+          },
+          method: 'GET',
+          success: function (res2) {
+            console.log(res2.data)
+            that.globalData.userInfo.openId = res2.data.openid;//获取到的openid  
+            that.globalData.userInfo.sessionKey = res2.data.session_key;//获取到session_key  
+        }});
+        wx.getUserInfo({
+          success: function (res3) {
+            console.log(res3.userInfo)
+            that.globalData.personInfo = res3.userInfo
+          }
+        });
+      }
+    })
   },
+
+  // ---------------------------------music control--------------------------------
   stopmusic: function (type, cb) {
     var that = this;
     wx.pauseBackgroundAudio();
   },
+
   seekmusic: function (type, cb, seek) {
     var that = this;
 
     this.globalData.playtype = type;
     this.playing(type)
   },
+  
   playing: function (type, cb, seek) {
     wx.showToast({
       title: '加载歌曲中',
@@ -44,14 +64,7 @@ App({
       duration: 1500
     })
     var that = this
-    var m = {}
-    // 获取上次播放数据
-    let index = wx.getStorageSync('curIndex')
-    let tracks = wx.getStorageSync('tracks')
-    if (tracks) {
-      let track = tracks[index]
-      m = track
-    }
+
     // 使用通知
     wx.playBackgroundAudio({
       dataUrl: m.aFilePath,
@@ -65,11 +78,16 @@ App({
         cb && cb();
       },
       fail: function () {
-        if (type == 1) {
-          that.nextplay(1)
-        } else {
-          that.nextfm();
-        }
+        wx.showToast({
+          title: 'Server Error , Please go back and try again.',
+          icon: 'loading',
+          duration: 1500
+        })
+        // if (type == 1) {
+        //   that.nextplay(1)
+        // } else {
+        //   that.nextfm();
+        // }
       }
     })
   },
@@ -168,6 +186,26 @@ App({
   onHide: function () {
     this.globalData.hide = true
   },
+  requestData: function (url, params, callback) {
+    wx.showToast({
+      title: '数据加载中!',
+      duration: 2000
+    })
+    wx.request({
+      url: url,
+      data: params,
+      method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
+      header: { 'Content-Type': 'application/json' }, // 设置请求的 header
+      success: function (res) {
+        callback(null, res.data);
+        wx.hideToast()
+      },
+      fail: function (e) {
+        wx.hideToast()
+        callback(e)
+      }
+    })
+  },
   globalData: {
     apiurl : "http://localhost:8080",
     hasLogin: false,
@@ -182,7 +220,11 @@ App({
     shuffle: 1,
     globalStop: true,
     currentPosition: 0,
-    userInfo: null,
+    userInfo: {
+      openId:"",
+      sessionKey: ""
+    },
+    personInfo: {},
     tracks:[],
     index: 0,
     duration : wx.getBackgroundAudioPlayerState({

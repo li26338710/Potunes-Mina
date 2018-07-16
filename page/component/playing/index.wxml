@@ -1,0 +1,31 @@
+<view class="page">
+  
+  <view class="lrc" style="margin-top:{{marginTop}}px;height:{{lrcHeight}}px">
+    <block wx:for="{{lry}}" wx:key="">
+      <view class="lry {{currentIndex == index ? 'currentTime' : ''}}">{{item[1]}}</view>
+    </block>
+  </view>
+  <image class="pic_sig" src="{{pic}}"></image>
+  <view class="bottom">
+    <view  class="state" id="playingaction" hidden="{{mode!=1}}">
+      <image class="state_chose" src="../../../imgs/rewind.png" bindtap="playFB"/>
+      <image class="state_chose" hidden="{{playing}}" bindtap="playingtoggle" data-p="{{!playing}}" src="../../../imgs/play-button.png"  />
+      <image class="state_chose" hidden="{{!playing}}" bindtap="playingtoggle" data-p="{{playing}}" src="../../../imgs/pause.png" />
+      <image class="state_chose" src="../../../imgs/fast-forward.png" bindtap="playFF" />
+    </view>
+    <view  class="state" id="recorderaction" hidden="{{mode!=2}}">
+
+      <image class="state_chose" bindtap="onRecorderStart" hidden="{{recording!=0}}"src="../../../imgs/microphone.png"  open-type="getUserInfo" bindgetuserinfo="onGotUserInfo" />
+      <image class="state_chose" bindtap="onRecorderPause" hidden="{{recording!=1}}" src="../../../imgs/pause.png" />
+      <image class="state_chose" bindtap="onRecorderUpload" hidden="{{recording!=3}}" src="../../../imgs/cloud-computing.png" />
+    </view>
+    <view class="controller">
+      <text class="time-start">{{songState.currentPosition}}</text>
+      <view class="time-bar">
+        <view class="time-play" style="transform: translateX({{songState.progress}}%)"></view>
+      </view>
+      <text class="time-total">{{songState.duration}}</text>
+    </view>
+  </view>
+</view>
+

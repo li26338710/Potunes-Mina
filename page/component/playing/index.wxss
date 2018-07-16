@@ -1,0 +1,99 @@
+.page {
+  position: fixed;
+  left: 0;
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 34rpx;
+  
+}
+.lrc,.pic_sig {
+    width: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	font-size: 30rpx;
+	overflow: hidden;
+}
+.pic_sig {
+	height: 240px;
+	position: fixed;
+	left: 0;
+	top: 0;
+}
+.lrc {
+	position: fixed;
+	left: 0;
+	top: 240px;
+}
+.lry {
+	height: 20px;
+	line-height:20px;
+	text-align: center; 
+}
+.currentTime {
+	color: #be241c;
+	/*height: 30px;
+	line-height: 30px;*/
+}
+
+
+.bottom {
+	position: fixed;
+	bottom: 0;
+	width: 100%;
+}
+.state{
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+  padding-left:10%;
+  padding-right:10%;
+}
+.state_chose {
+	width: 58rpx;
+	height: 58rpx;
+	margin-left: 60rpx;
+	margin-right: 60rpx;
+}
+.state_play {
+	width: 100rpx;
+	height: 100rpx;
+}
+.controller{
+	height: 80rpx;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+.time-start, .time-total{
+	flex: none;
+	color: #808080;
+	width: 110rpx;
+	text-align: center;
+	font-size: 24rpx;
+}
+.time-bar{
+	position: relative;
+	flex: auto;
+	height: 4rpx;
+	overflow: hidden;
+	background: lightgray;
+}
+.time-play{
+	position: absolute;
+	left: -100%;
+	width: 100%;
+	height: 100%;
+	background: #be241c;
+	transition: all 1s linear;
+}
+.progress{
+	height: 80rpx;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}

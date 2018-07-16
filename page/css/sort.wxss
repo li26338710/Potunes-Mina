@@ -1,0 +1,37 @@
+.sort_item {
+    margin: 20rpx;
+    white-space: nowrap;
+    /*display: flex;
+    justify-content: space-between;
+    align-items: center;*/
+    border-bottom: 1px solid #DCDCDC;
+}
+.sort_img {
+    display: inline-block;
+    /*flex: none;
+    position: relative;*/
+}
+.sort_img image {
+    width: 180rpx;
+    height: 180rpx;
+}
+
+.sort_song {
+    width: 58%;
+    display: inline-block;
+    /*flex: auto;*/
+    margin-left: 30rpx;
+    overflow: hidden;
+    padding-right: 30rpx;
+}
+.sortInfo image {
+    width: 20rpx;
+    height: 20rpx;
+}
+.sortInfo text {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    margin-left: 16rpx;
+    margin-right: 10rpx;
+}
